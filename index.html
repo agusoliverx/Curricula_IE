@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Malla Ingeniería Eléctrica - Perfil Biomédica</title>
   <style>
     body {
@@ -33,6 +33,7 @@
       border: 1px solid #ccc;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      position: relative;
     }
     .course.completed {
       background-color: #c8f7c5;
@@ -45,99 +46,170 @@
 <body>
   <h1>Malla Curricular - Ing. Eléctrica (Perfil Biomédica)</h1>
 
-  <!-- SEMESTRES -->
+  <div id="malla-container"></div>
+
   <script>
     const malla = {
       1: [
         "Cálculo dif. e integral en una variable",
         "GAL 1",
         "Física 1",
-        "Tallerine",
-        "Matemática inicial (1)"
+        // "Tallerine", // eliminado
+        // "Matemática inicial (1)", // eliminado
       ],
       2: [
         "Cálculo dif. e integral en varias variables",
         "GAL 2",
         "Física 2",
-        "Programación 1"
+        "Programación 1",
       ],
       3: [
         "Cálculo Vectorial",
         "Probabilidad y Estadística",
         "Física 3",
         "Mecánica Newtoniana",
-        "Física Experimental 1"
+        "Física Experimental 1",
       ],
       4: [
         "Ecuaciones Diferenciales",
         "Electromagnetismo",
         "Física Experimental 2",
         "Teoría de Circuitos",
-        "Diseño Lógico"
+        "Diseño Lógico",
       ],
       5: [
         "Funciones de Variable Compleja (Nueva)",
         "Señales y Sistemas",
         "Intro. a los microprocesadores",
         "Programación para Ingeniería Eléctrica",
-        "Electrónica Fundamental"
+        "Electrónica Fundamental",
       ],
       6: [
         "Métodos numéricos",
         "Sistemas y Control",
         "Taller Fourier",
         "Señales aleatorias y Modulación",
-        "Opcional Ingeniería Eléctrica"
+        "Opcional Ingeniería Eléctrica",
       ],
       7: [
         "Medidas Eléctricas",
         "Opcional Ingeniería Eléctrica",
         "Opcional Básica",
         "Opcional Ingeniería Biológica",
-        "Estimación y predicción en series temporales"
+        "Estimación y predicción en series temporales",
       ],
       8: [
         "Pasantía",
         "Redes de Datos I",
         "Ingeniería Biomédica",
         "AIMDs",
-        "Opcional Ingeniería Eléctrica"
+        "Opcional Ingeniería Eléctrica",
       ],
       9: [
         "Proyecto",
         "Opcional Ing. Industrial",
         "Opcional Ingeniería Biológica",
-        "Electrotecnia"
+        "Electrotecnia",
       ],
       10: [
         "Proyecto",
         "Legislación y relaciones industriales",
         "Opc. Ingeniería y sociedad",
         "Economía",
-        "Instalaciones Eléctricas"
-      ]
+        "Instalaciones Eléctricas",
+      ],
     };
 
-    // Renderización dinámica
-    Object.entries(malla).forEach(([semestre, cursos]) => {
-      document.write(`<div class="semester"><h2>Semestre ${semestre}</h2>`);
-      cursos.forEach(curso => {
-        document.write(`<div class="course" onclick="toggleStatus(this)">${curso}</div>`);
-      });
-      document.write(`</div>`);
-    });
+    const previas = {
+      "Cálculo dif. e integral en una variable": [],
+      "GAL 1": [],
+      "Física 1": [],
 
-    function toggleStatus(el) {
-      if (el.classList.contains("completed")) {
-        el.classList.remove("completed");
-        el.classList.add("in-progress");
-      } else if (el.classList.contains("in-progress")) {
-        el.classList.remove("in-progress");
-      } else {
-        el.classList.add("completed");
-      }
-    }
+      "Cálculo dif. e integral en varias variables": ["Cálculo dif. e integral en una variable"],
+      "GAL 2": ["GAL 1"],
+      "Física 2": ["Cálculo dif. e integral en una variable", "Física 1"],
+      "Programación 1": [],
+
+      "Cálculo Vectorial": [
+        "Cálculo dif. e integral en varias variables",
+        "Cálculo dif. e integral en una variable",
+        "GAL 1"
+      ],
+      "Probabilidad y Estadística": [
+        "Cálculo dif. e integral en una variable",
+        "Cálculo dif. e integral en varias variables",
+        "GAL 1"
+      ],
+      "Física 3": ["Cálculo dif. e integral en una variable"],
+      "Mecánica Newtoniana": [
+        "Física 1",
+        "Cálculo dif. e integral en varias variables",
+        "Física 2 o Física 3",
+        "Cálculo dif. e integral en una variable"
+      ],
+      "Física Experimental 1": ["Física 1"],
+
+      "Ecuaciones Diferenciales": [
+        "Cálculo dif. e integral en una variable",
+        "Cálculo dif. e integral en varias variables",
+        "GAL 1",
+        "GAL 2"
+      ],
+      "Electromagnetismo": [
+        "GAL 1",
+        "GAL 2",
+        "Cálculo dif. e integral en una variable",
+        "Cálculo dif. e integral en varias variables",
+        "Cálculo Vectorial"
+      ],
+      "Física Experimental 2": ["Física Experimental 1", "Física 3"],
+      "Teoría de Circuitos": [
+        "Física 1",
+        "Física 3",
+        "Cálculo dif. e integral en una variable",
+        "Cálculo dif. e integral en varias variables",
+        "GAL 1"
+        // 15 créditos del área física (no se modela aquí)
+      ],
+      "Diseño Lógico": []
+    };
+
+    const container = document.getElementById("malla-container");
+
+    Object.entries(malla).forEach(([semestre, cursos]) => {
+      const semDiv = document.createElement("div");
+      semDiv.className = "semester";
+
+      const h2 = document.createElement("h2");
+      h2.textContent = `Semestre ${semestre}`;
+      semDiv.appendChild(h2);
+
+      cursos.forEach(curso => {
+        const courseDiv = document.createElement("div");
+        courseDiv.className = "course";
+        courseDiv.textContent = curso;
+
+        // Creamos el texto de previas para tooltip
+        const pre = previas[curso];
+        const preText = (pre && pre.length > 0) ? `Previas: ${pre.join(", ")}` : "Previas: Ninguna";
+        courseDiv.title = preText;
+
+        courseDiv.onclick = () => {
+          if (courseDiv.classList.contains("completed")) {
+            courseDiv.classList.remove("completed");
+            courseDiv.classList.add("in-progress");
+          } else if (courseDiv.classList.contains("in-progress")) {
+            courseDiv.classList.remove("in-progress");
+          } else {
+            courseDiv.classList.add("completed");
+          }
+        };
+
+        semDiv.appendChild(courseDiv);
+      });
+
+      container.appendChild(semDiv);
+    });
   </script>
 </body>
 </html>
-
