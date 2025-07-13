@@ -7,8 +7,7 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      max-width: 1200px;
-      margin: auto;
+      overflow-x: hidden;
     }
 
     h1 {
@@ -38,29 +37,30 @@
 
     table {
       width: 100%;
-      border-collapse: collapse;
       table-layout: fixed;
+      border-collapse: collapse;
     }
 
     th {
       background-color: #f0f0f0;
       text-align: center;
-      padding: 10px;
+      padding: 5px;
+      font-size: 0.9rem;
     }
 
     td {
       vertical-align: top;
-      text-align: center;
-      padding: 10px;
+      padding: 5px;
     }
 
     .course {
       background-color: #e0e0e0;
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 8px;
+      padding: 6px;
+      margin: 4px 0;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      text-align: center;
       cursor: pointer;
-      font-size: 0.85rem;
       transition: background-color 0.3s;
     }
 
@@ -82,12 +82,9 @@
 
   <table border="1">
     <thead>
-      <tr>
-        <th>Año/Semestre</th>
-        <th>Materias</th>
-      </tr>
+      <tr id="semestres-header"></tr>
     </thead>
-    <tbody id="malla"></tbody>
+    <tbody id="malla-body"></tbody>
   </table>
 
   <script>
@@ -144,92 +141,96 @@
       "Instalaciones Eléctricas": []
     };
 
-    const tbody = document.getElementById("malla");
-    const estadoGuardado = JSON.parse(localStorage.getItem("materiasCompletadas") || "[]");
+    const headerRow = document.getElementById("semestres-header");
+    const mallaBody = document.getElementById("malla-body");
 
-    Object.entries(malla).forEach(([semestre, materias]) => {
-      const tr = document.createElement("tr");
-      const tdSem = document.createElement("td");
-      tdSem.textContent = `Semestre ${semestre}`;
-      tr.appendChild(tdSem);
+    const maxMaterias = Math.max(...Object.values(malla).map(m => m.length));
 
-      const td = document.createElement("td");
-
-      materias.forEach(([nombre, creditos]) => {
-        const div = document.createElement("div");
-        div.className = "course";
-        div.textContent = `${nombre} (${creditos} cr)`;
-        div.dataset.nombre = nombre;
-        div.dataset.creditos = creditos;
-
-        if (estadoGuardado.includes(nombre)) {
-          div.classList.add("completed");
-        }
-
-        const requisitos = previas[nombre] || [];
-        div.title = requisitos.length > 0
-          ? `Previas:\n- ${requisitos.join("\n- ")}`
-          : "Sin previas";
-
-        div.addEventListener("click", () => {
-          if (div.classList.contains("completed")) {
-            div.classList.remove("completed");
-          } else {
-            if (requisitosCompletos(requisitos)) {
-              div.classList.add("completed");
-            } else {
-              alert("No podés marcar esta materia porque no cumplís todas las previas.");
-            }
-          }
-          guardarEstado();
-          actualizarCreditos();
-        });
-
-        td.appendChild(div);
-      });
-
-      tr.appendChild(td);
-      tbody.appendChild(tr);
-    });
-
-    function requisitosCompletos(requisitos) {
-      return requisitos.every(nombre => {
-        if (nombre.includes(" o ")) {
-          return nombre.split(" o ").some(opcion => estaCompletada(opcion));
-        }
-        return estaCompletada(nombre);
-      });
+    // Crear columnas
+    for (let semestre = 1; semestre <= 10; semestre++) {
+      const th = document.createElement("th");
+      th.textContent = `Sem ${semestre}`;
+      headerRow.appendChild(th);
     }
 
-    function estaCompletada(nombre) {
-      return [...document.querySelectorAll(".course.completed")].some(div =>
-        div.dataset.nombre === nombre
+    // Crear filas (una por materia en vertical)
+    for (let i = 0; i < maxMaterias; i++) {
+      const tr = document.createElement("tr");
+
+      for (let semestre = 1; semestre <= 10; semestre++) {
+        const td = document.createElement("td");
+        const materia = malla[semestre][i];
+        if (materia) {
+          const [nombre, creditos] = materia;
+          const div = document.createElement("div");
+          div.className = "course";
+          div.textContent = `${nombre} (${creditos} cr)`;
+          div.dataset.nombre = nombre;
+          div.dataset.creditos = creditos;
+
+          const completadas = JSON.parse(localStorage.getItem("materiasCompletadas") || "[]");
+          if (completadas.includes(nombre)) {
+            div.classList.add("completed");
+          }
+
+          const requisitos = previas[nombre] || [];
+          div.title = requisitos.length ? `Previas:\n- ${requisitos.join("\n- ")}` : "Sin previas";
+
+          div.addEventListener("click", () => {
+            if (div.classList.contains("completed")) {
+              div.classList.remove("completed");
+            } else {
+              if (requisitosCompletos(requisitos)) {
+                div.classList.add("completed");
+              } else {
+                alert("No podés marcar esta materia porque no cumplís las previas.");
+                return;
+              }
+            }
+            guardarEstado();
+            actualizarCreditos();
+          });
+
+          td.appendChild(div);
+        }
+        tr.appendChild(td);
+      }
+
+      mallaBody.appendChild(tr);
+    }
+
+    function requisitosCompletos(requisitos) {
+      return requisitos.every(nombre =>
+        nombre.includes(" o ")
+          ? nombre.split(" o ").some(estaCompletada)
+          : estaCompletada(nombre)
       );
     }
 
+    function estaCompletada(nombre) {
+      return [...document.querySelectorAll(".course.completed")]
+        .some(div => div.dataset.nombre === nombre);
+    }
+
     function actualizarCreditos() {
-      const materias = document.querySelectorAll(".course.completed");
       let suma = 0;
-      materias.forEach(div => {
+      document.querySelectorAll(".course.completed").forEach(div => {
         suma += parseInt(div.dataset.creditos);
       });
-
       const total = 450;
       const porcentaje = Math.min((suma / total) * 100, 100).toFixed(2);
-
       document.getElementById("creditos-contador").textContent =
         `Créditos completados: ${suma} / ${total}`;
-
       document.getElementById("barra-progreso").style.width = `${porcentaje}%`;
     }
 
     function guardarEstado() {
-      const completadas = [...document.querySelectorAll(".course.completed")]
+      const materias = [...document.querySelectorAll(".course.completed")]
         .map(div => div.dataset.nombre);
-      localStorage.setItem("materiasCompletadas", JSON.stringify(completadas));
+      localStorage.setItem("materiasCompletadas", JSON.stringify(materias));
     }
 
-    actualizarCreditos(); // mostrar progreso inicial
+    actualizarCreditos();
   </script>
 </body>
 </html>
