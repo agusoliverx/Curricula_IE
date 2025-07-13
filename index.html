@@ -7,46 +7,135 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      background-color: #f9f9f9;
+      background-color: #f0f4f8;
     }
     h1 {
       text-align: center;
-      margin-bottom: 40px;
-    }
-    .semester {
       margin-bottom: 30px;
-      padding: 15px;
-      border-radius: 12px;
-      background: #ffffff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      color: #334e68;
     }
-    .semester h2 {
-      margin-bottom: 10px;
-      color: #444;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
     }
+
+    th, td {
+      padding: 12px 15px;
+      vertical-align: top;
+      border-bottom: 1px solid #e1e8ed;
+    }
+
+    th {
+      background-color: #627d98;
+      color: white;
+      font-weight: 600;
+      text-align: left;
+      width: 60px;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+
+    td.courses {
+      padding-left: 0;
+    }
+
     .course {
       display: inline-block;
-      background-color: #e0e0e0;
-      padding: 10px 15px;
-      margin: 6px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      background-color: #f9f7f7;
+      color: #334e68;
+      padding: 8px 14px;
+      margin: 6px 6px 6px 0;
+      border-radius: 12px;
+      border: 1px solid #a7bbc7;
       cursor: pointer;
-      transition: background-color 0.3s ease;
       position: relative;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-weight: 500;
+      font-size: 0.95rem;
     }
+
+    /* Colores pastel para estados */
     .course.completed {
-      background-color: #c8f7c5;
+      background-color: #c8e6c9; /* verde pastel */
+      color: #2e7d32;
+      border-color: #2e7d32;
+      text-decoration: none;
+      /* RAYA DIAGONAL: usando pseudo-elemento */
     }
+    .course.completed::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      width: calc(100% - 16px);
+      border-bottom: 2.5px solid #2e7d32;
+      transform: translateY(-50%) rotate(-45deg);
+      pointer-events: none;
+      z-index: 1;
+      border-radius: 2px;
+    }
+
     .course.in-progress {
-      background-color: #fff3b0;
+      background-color: #fff3b0; /* amarillo pastel */
+      color: #b38600;
+      border-color: #b38600;
+    }
+
+    .course:hover {
+      background-color: #d1e7ff;
+      border-color: #6699cc;
+      color: #335577;
+    }
+
+    /* Tooltip */
+    .course[title]:hover::after {
+      content: attr(title);
+      position: absolute;
+      left: 50%;
+      bottom: 120%;
+      transform: translateX(-50%);
+      background: #334e68;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      font-size: 0.8rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      z-index: 10;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+    .course[title]::after {
+      opacity: 0;
+    }
+
+    /* Ajuste para que tooltip desaparezca si no hover */
+    .course[title]:not(:hover)::after {
+      opacity: 0;
     }
   </style>
 </head>
 <body>
   <h1>Malla Curricular - Ing. Eléctrica (Perfil Biomédica)</h1>
 
-  <div id="malla-container"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>Sem.</th>
+        <th>Materias</th>
+      </tr>
+    </thead>
+    <tbody id="malla-body">
+      <!-- Se genera dinámicamente -->
+    </tbody>
+  </table>
 
   <script>
     const malla = {
@@ -54,8 +143,6 @@
         "Cálculo dif. e integral en una variable",
         "GAL 1",
         "Física 1",
-        // "Tallerine", // eliminado
-        // "Matemática inicial (1)", // eliminado
       ],
       2: [
         "Cálculo dif. e integral en varias variables",
@@ -169,46 +256,49 @@
         "Cálculo dif. e integral en una variable",
         "Cálculo dif. e integral en varias variables",
         "GAL 1"
-        // 15 créditos del área física (no se modela aquí)
       ],
       "Diseño Lógico": []
     };
 
-    const container = document.getElementById("malla-container");
+    const tbody = document.getElementById("malla-body");
 
     Object.entries(malla).forEach(([semestre, cursos]) => {
-      const semDiv = document.createElement("div");
-      semDiv.className = "semester";
+      const tr = document.createElement("tr");
 
-      const h2 = document.createElement("h2");
-      h2.textContent = `Semestre ${semestre}`;
-      semDiv.appendChild(h2);
+      // Columna semestre (con º)
+      const tdSem = document.createElement("th");
+      tdSem.textContent = `${semestre}º`;
+      tr.appendChild(tdSem);
+
+      // Columna cursos
+      const tdCursos = document.createElement("td");
+      tdCursos.className = "courses";
 
       cursos.forEach(curso => {
-        const courseDiv = document.createElement("div");
-        courseDiv.className = "course";
-        courseDiv.textContent = curso;
+        const divCurso = document.createElement("div");
+        divCurso.className = "course";
+        divCurso.textContent = curso;
 
-        // Creamos el texto de previas para tooltip
         const pre = previas[curso];
         const preText = (pre && pre.length > 0) ? `Previas: ${pre.join(", ")}` : "Previas: Ninguna";
-        courseDiv.title = preText;
+        divCurso.title = preText;
 
-        courseDiv.onclick = () => {
-          if (courseDiv.classList.contains("completed")) {
-            courseDiv.classList.remove("completed");
-            courseDiv.classList.add("in-progress");
-          } else if (courseDiv.classList.contains("in-progress")) {
-            courseDiv.classList.remove("in-progress");
+        divCurso.onclick = () => {
+          if (divCurso.classList.contains("completed")) {
+            divCurso.classList.remove("completed");
+            divCurso.classList.add("in-progress");
+          } else if (divCurso.classList.contains("in-progress")) {
+            divCurso.classList.remove("in-progress");
           } else {
-            courseDiv.classList.add("completed");
+            divCurso.classList.add("completed");
           }
         };
 
-        semDiv.appendChild(courseDiv);
+        tdCursos.appendChild(divCurso);
       });
 
-      container.appendChild(semDiv);
+      tr.appendChild(tdCursos);
+      tbody.appendChild(tr);
     });
   </script>
 </body>
