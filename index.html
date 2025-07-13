@@ -14,21 +14,21 @@
     h1 {
       text-align: center;
       color: #2c3e50;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     .grid-container {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
-      gap: 20px;
-      overflow-x: auto;
+      gap: 10px;
+      max-width: 100%;
     }
 
     .semester-column {
       background: #ffffff;
-      border-radius: 12px;
-      padding: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      padding: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
 
     .semester-title {
@@ -36,22 +36,24 @@
       font-weight: bold;
       background-color: #2c3e50;
       color: white;
-      padding: 8px;
-      border-radius: 8px;
-      margin-bottom: 12px;
+      font-size: 0.75rem;
+      padding: 6px;
+      border-radius: 6px;
+      margin-bottom: 8px;
     }
 
     .course-box {
       background-color: #e8f0fe;
-      border-left: 5px solid #4285f4;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      font-size: 0.95rem;
+      border-left: 4px solid #4285f4;
+      padding: 6px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+      font-size: 0.7rem;
       color: #2c3e50;
       cursor: pointer;
       position: relative;
       transition: background-color 0.3s;
+      line-height: 1.2;
     }
 
     .course-box.completed {
@@ -74,12 +76,22 @@
       transform: translateX(-50%);
       background: #2c3e50;
       color: #fff;
-      padding: 6px 10px;
-      font-size: 0.8rem;
+      padding: 4px 8px;
+      font-size: 0.7rem;
       white-space: nowrap;
-      border-radius: 6px;
-      margin-top: 6px;
+      border-radius: 4px;
+      margin-top: 4px;
       z-index: 10;
+    }
+
+    .course-name {
+      font-weight: 600;
+    }
+
+    .course-credits {
+      font-size: 0.65rem;
+      color: #555;
+      margin-top: 2px;
     }
   </style>
 </head>
@@ -91,122 +103,152 @@
   <script>
     const malla = {
       1: [
-        "Cálculo dif. e integral en una variable",
-        "GAL 1",
-        "Física 1",
+        ["Cálculo dif. e integral en una variable", 13],
+        ["GAL 1", 9],
+        ["Física 1", 10],
       ],
       2: [
-        "Cálculo dif. e integral en varias variables",
-        "GAL 2",
-        "Física 2",
-        "Programación 1",
+        ["Cálculo dif. e integral en varias variables", 13],
+        ["GAL 2", 9],
+        ["Física 2", 10],
+        ["Programación 1", 10],
       ],
       3: [
-        "Cálculo Vectorial",
-        "Probabilidad y Estadística",
-        "Física 3",
-        "Mecánica Newtoniana",
-        "Física Experimental 1",
+        ["Cálculo Vectorial", 10],
+        ["Probabilidad y Estadística", 10],
+        ["Física 3", 10],
+        ["Mecánica Newtoniana", 10],
+        ["Física Experimental 1", 5],
       ],
       4: [
-        "Ecuaciones Diferenciales",
-        "Electromagnetismo",
-        "Física Experimental 2",
-        "Teoría de Circuitos",
-        "Diseño Lógico",
+        ["Ecuaciones Diferenciales", 10],
+        ["Electromagnetismo", 10],
+        ["Física Experimental 2", 5],
+        ["Teoría de Circuitos", 8],
+        ["Diseño Lógico", 12],
       ],
       5: [
-        "Funciones de Variable Compleja (Nueva)",
-        "Señales y Sistemas",
-        "Intro. a los microprocesadores",
-        "Programación para Ingeniería Eléctrica",
-        "Electrónica Fundamental",
+        ["Funciones de Variable Compleja", 5],
+        ["Señales y Sistemas", 11],
+        ["Intro. a los microprocesadores", 11],
+        ["Programación 2", 12],
+        ["Electrónica Fundamental", 11],
       ],
       6: [
-        "Métodos numéricos",
-        "Sistemas y Control",
-        "Taller Fourier",
-        "Señales aleatorias y Modulación",
-        "Opcional Ingeniería Eléctrica",
+        ["Métodos numéricos", 8],
+        ["Sistemas y Control", 12],
+        ["Taller Fourier", 8],
+        ["Señales aleatorias y Modulación", 8],
+        ["Opcional Ingeniería Eléctrica", 0],
       ],
       7: [
-        "Medidas Eléctricas",
-        "Opcional Ingeniería Eléctrica",
-        "Opcional Básica",
-        "Opcional Ingeniería Biológica",
-        "Estimación y predicción en series temporales",
+        ["Medidas Eléctricas", 10],
+        ["Opcional Ingeniería Eléctrica", 0],
+        ["Opcional Básica", 0],
+        ["Opcional Ingeniería Biológica", 0],
+        ["Estimación y predicción en series temporales", 10],
       ],
       8: [
-        "Pasantía",
-        "Redes de Datos I",
-        "Ingeniería Biomédica",
-        "AIMDs",
-        "Opcional Ingeniería Eléctrica",
+        ["Pasantía", 10],
+        ["Redes de Datos I", 8],
+        ["Ingeniería Biomédica", 8],
+        ["AIMDs", 8],
+        ["Opcional Ingeniería Eléctrica", 0],
       ],
       9: [
-        "Proyecto",
-        "Opcional Ing. Industrial",
-        "Opcional Ingeniería Biológica",
-        "Electrotecnia",
+        ["Proyecto", 10],
+        ["Opcional Ing. Industrial", 0],
+        ["Opcional Ingeniería Biológica", 0],
+        ["Electrotecnia", 10],
       ],
       10: [
-        "Proyecto",
-        "Legislación y relaciones industriales",
-        "Opc. Ingeniería y sociedad",
-        "Economía",
-        "Instalaciones Eléctricas",
+        ["Proyecto", 25],
+        ["Legislación y relaciones industriales", 6],
+        ["Opc. Ingeniería y sociedad", 0],
+        ["Economía", 7],
+        ["Instalaciones Eléctricas", 8],
       ],
     };
 
     const previas = {
-      "Cálculo dif. e integral en una variable": [],
-      "GAL 1": [],
-      "Física 1": [],
-      "Cálculo dif. e integral en varias variables": ["Cálculo dif. e integral en una variable"],
-      "GAL 2": ["GAL 1"],
-      "Física 2": ["Cálculo dif. e integral en una variable", "Física 1"],
-      "Programación 1": [],
-      "Cálculo Vectorial": [
-        "Cálculo dif. e integral en varias variables",
-        "Cálculo dif. e integral en una variable",
-        "GAL 1"
-      ],
-      "Probabilidad y Estadística": [
-        "Cálculo dif. e integral en una variable",
-        "Cálculo dif. e integral en varias variables",
-        "GAL 1"
-      ],
-      "Física 3": ["Cálculo dif. e integral en una variable"],
-      "Mecánica Newtoniana": [
-        "Física 1",
-        "Cálculo dif. e integral en varias variables",
-        "Física 2 o Física 3",
-        "Cálculo dif. e integral en una variable"
-      ],
-      "Física Experimental 1": ["Física 1"],
-      "Ecuaciones Diferenciales": [
-        "Cálculo dif. e integral en una variable",
-        "Cálculo dif. e integral en varias variables",
-        "GAL 1",
-        "GAL 2"
-      ],
-      "Electromagnetismo": [
-        "GAL 1",
-        "GAL 2",
-        "Cálculo dif. e integral en una variable",
-        "Cálculo dif. e integral en varias variables",
-        "Cálculo Vectorial"
-      ],
-      "Física Experimental 2": ["Física Experimental 1", "Física 3"],
-      "Teoría de Circuitos": [
-        "Física 1",
-        "Física 3",
-        "Cálculo dif. e integral en una variable",
-        "Cálculo dif. e integral en varias variables",
-        "GAL 1"
-      ],
-      "Diseño Lógico": []
-    };
+  "Cálculo dif. e integral en una variable": [],
+  "GAL 1": [],
+  "Física 1": [],
+
+  "Cálculo dif. e integral en varias variables": ["Cálculo dif. e integral en una variable"],
+  "GAL 2": ["GAL 1"],
+  "Física 2": ["Cálculo dif. e integral en una variable", "Física 1"],
+  "Programación 1": [],
+
+  "Cálculo Vectorial": [
+    "Cálculo dif. e integral en varias variables",
+    "Cálculo dif. e integral en una variable",
+    "GAL 1"
+  ],
+  "Probabilidad y Estadística": [
+    "Cálculo dif. e integral en una variable",
+    "Cálculo dif. e integral en varias variables",
+    "GAL 1"
+  ],
+  "Física 3": ["Cálculo dif. e integral en una variable"],
+  "Mecánica Newtoniana": [
+    "Física 1",
+    "Cálculo dif. e integral en varias variables",
+    "Física 2 o Física 3",
+    "Cálculo dif. e integral en una variable"
+  ],
+  "Física Experimental 1": ["Física 1"],
+
+  "Ecuaciones Diferenciales": [
+    "Cálculo dif. e integral en una variable",
+    "Cálculo dif. e integral en varias variables",
+    "GAL 1",
+    "GAL 2"
+  ],
+  "Electromagnetismo": [
+    "GAL 1",
+    "GAL 2",
+    "Cálculo dif. e integral en una variable",
+    "Cálculo dif. e integral en varias variables",
+    "Cálculo Vectorial"
+  ],
+  "Física Experimental 2": ["Física Experimental 1", "Física 3"],
+  "Teoría de Circuitos": [
+    "Física 1",
+    "Física 3",
+    "Cálculo dif. e integral en una variable",
+    "Cálculo dif. e integral en varias variables",
+    "GAL 1"
+  ],
+  "Diseño Lógico": [],
+
+  "Funciones de Variable Compleja": [],
+  "Señales y Sistemas": [],
+  "Intro. a los microprocesadores": [],
+  "Programación 2": [],
+  "Electrónica Fundamental": [],
+
+  "Métodos numéricos": [],
+  "Sistemas y Control": [],
+  "Taller Fourier": [],
+  "Señales aleatorias y Modulación": [],
+
+  "Medidas Eléctricas": [],
+  "Estimación y predicción en series temporales": [],
+
+  "Pasantía": [],
+  "Redes de Datos I": [],
+  "Ingeniería Biomédica": [],
+  "AIMDs": [],
+
+  "Proyecto": [],
+  "Electrotecnia": [],
+
+  "Legislación y relaciones industriales": [],
+  "Economía": [],
+  "Instalaciones Eléctricas": []
+};
+
 
     const container = document.getElementById("malla-grid");
 
@@ -219,13 +261,17 @@
       title.textContent = `${semestre}º Sem`;
       column.appendChild(title);
 
-      malla[semestre]?.forEach(curso => {
+      malla[semestre]?.forEach(([curso, creditos]) => {
         const box = document.createElement("div");
         box.className = "course-box";
-        box.textContent = curso;
 
         const pre = previas[curso] || [];
         box.setAttribute("data-previas", pre.length ? `Previas: ${pre.join(", ")}` : "Previas: Ninguna");
+
+        box.innerHTML = `
+          <div class="course-name">${curso}</div>
+          <div class="course-credits">${creditos} créditos</div>
+        `;
 
         box.addEventListener("click", () => {
           if (box.classList.contains("completed")) {
