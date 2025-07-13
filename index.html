@@ -3,41 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <title>Malla Ingeniería Eléctrica - Perfil Biomédica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f0f4f8;
+      font-family: 'Roboto', sans-serif;
+      padding: 30px;
+      background-color: #f8fafc;
+      color: #333;
     }
     h1 {
       text-align: center;
-      margin-bottom: 30px;
-      color: #334e68;
+      margin-bottom: 40px;
+      color: #2978b5;
+      font-weight: 700;
+      font-size: 2rem;
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0 10px;
       background: #fff;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      border-radius: 8px;
       overflow: hidden;
     }
 
+    thead tr {
+      background-color: #2978b5;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      user-select: none;
+    }
+
     th, td {
-      padding: 12px 15px;
+      padding: 15px 20px;
       vertical-align: top;
-      border-bottom: 1px solid #e1e8ed;
     }
 
     th {
-      background-color: #627d98;
-      color: white;
-      font-weight: 600;
-      text-align: left;
-      width: 60px;
-      font-size: 0.9rem;
-      user-select: none;
+      text-align: center;
+      width: 70px;
+      border-right: 1px solid rgba(255,255,255,0.3);
+    }
+
+    tbody tr {
+      background-color: #fefefe;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    tbody tr:hover {
+      background-color: #f0f7ff;
     }
 
     td.courses {
@@ -46,38 +65,36 @@
 
     .course {
       display: inline-block;
-      background-color: #f9f7f7;
-      color: #334e68;
-      padding: 8px 14px;
+      background-color: #e3eaf7;
+      color: #2978b5;
+      padding: 6px 12px;
       margin: 6px 6px 6px 0;
-      border-radius: 12px;
-      border: 1px solid #a7bbc7;
+      border-radius: 14px;
+      border: 1px solid #bdd1f7;
       cursor: pointer;
       position: relative;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      font-weight: 500;
-      font-size: 0.95rem;
+      transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+      font-weight: 600;
+      font-size: 0.9rem;
+      user-select: none;
     }
 
-    /* Colores pastel para estados */
     .course.completed {
       background-color: #c8e6c9; /* verde pastel */
       color: #2e7d32;
       border-color: #2e7d32;
-      text-decoration: none;
-      /* RAYA DIAGONAL: usando pseudo-elemento */
     }
     .course.completed::after {
       content: "";
       position: absolute;
-      left: 8px;
+      left: 10px;
       top: 50%;
-      width: calc(100% - 16px);
-      border-bottom: 2.5px solid #2e7d32;
+      width: calc(100% - 20px);
+      border-bottom: 3px solid #2e7d32;
       transform: translateY(-50%) rotate(-45deg);
       pointer-events: none;
-      z-index: 1;
       border-radius: 2px;
+      z-index: 1;
     }
 
     .course.in-progress {
@@ -87,9 +104,10 @@
     }
 
     .course:hover {
-      background-color: #d1e7ff;
-      border-color: #6699cc;
-      color: #335577;
+      background-color: #d7e6fc;
+      border-color: #5596e6;
+      color: #1c3c72;
+      box-shadow: 0 0 8px rgba(85, 150, 230, 0.4);
     }
 
     /* Tooltip */
@@ -97,26 +115,23 @@
       content: attr(title);
       position: absolute;
       left: 50%;
-      bottom: 120%;
+      bottom: 140%;
       transform: translateX(-50%);
-      background: #334e68;
+      background: #2978b5;
       color: white;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 8px;
       white-space: nowrap;
       font-size: 0.8rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
       z-index: 10;
       pointer-events: none;
       opacity: 1;
-      transition: opacity 0.3s ease;
-      user-select: none;
+      transition: opacity 0.25s ease;
     }
     .course[title]::after {
       opacity: 0;
     }
-
-    /* Ajuste para que tooltip desaparezca si no hover */
     .course[title]:not(:hover)::after {
       opacity: 0;
     }
@@ -138,6 +153,8 @@
   </table>
 
   <script>
+    // Tu script permanece igual, solo asegúrate de copiarlo aquí.
+    // Para no hacerlo largo, te lo dejo idéntico al que me diste.
     const malla = {
       1: [
         "Cálculo dif. e integral en una variable",
