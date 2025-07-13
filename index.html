@@ -2,26 +2,33 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Malla Curricular</title>
+  <title>Malla Ingeniería Eléctrica - Perfil Biomédica</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
+      background-color: #f9f9f9;
     }
     h1 {
       text-align: center;
+      margin-bottom: 40px;
     }
     .semester {
       margin-bottom: 30px;
+      padding: 15px;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .semester h2 {
       margin-bottom: 10px;
+      color: #444;
     }
     .course {
       display: inline-block;
-      background-color: #f0f0f0;
+      background-color: #e0e0e0;
       padding: 10px 15px;
-      margin: 5px;
+      margin: 6px;
       border-radius: 8px;
       border: 1px solid #ccc;
       cursor: pointer;
@@ -36,25 +43,90 @@
   </style>
 </head>
 <body>
-  <h1>Malla Curricular</h1>
+  <h1>Malla Curricular - Ing. Eléctrica (Perfil Biomédica)</h1>
 
-  <div class="semester" id="semestre-1">
-    <h2>Semestre 1</h2>
-    <div class="course" onclick="toggleStatus(this)">Matemática I</div>
-    <div class="course" onclick="toggleStatus(this)">Programación I</div>
-    <div class="course" onclick="toggleStatus(this)">Física I</div>
-    <div class="course" onclick="toggleStatus(this)">Inglés Técnico</div>
-  </div>
-
-  <div class="semester" id="semestre-2">
-    <h2>Semestre 2</h2>
-    <div class="course" onclick="toggleStatus(this)">Matemática II</div>
-    <div class="course" onclick="toggleStatus(this)">Programación II</div>
-    <div class="course" onclick="toggleStatus(this)">Física II</div>
-    <div class="course" onclick="toggleStatus(this)">Comunicación</div>
-  </div>
-
+  <!-- SEMESTRES -->
   <script>
+    const malla = {
+      1: [
+        "Cálculo dif. e integral en una variable",
+        "GAL 1",
+        "Física 1",
+        "Tallerine",
+        "Matemática inicial (1)"
+      ],
+      2: [
+        "Cálculo dif. e integral en varias variables",
+        "GAL 2",
+        "Física 2",
+        "Programación 1"
+      ],
+      3: [
+        "Cálculo Vectorial",
+        "Probabilidad y Estadística",
+        "Física 3",
+        "Mecánica Newtoniana",
+        "Física Experimental 1"
+      ],
+      4: [
+        "Ecuaciones Diferenciales",
+        "Electromagnetismo",
+        "Física Experimental 2",
+        "Teoría de Circuitos",
+        "Diseño Lógico"
+      ],
+      5: [
+        "Funciones de Variable Compleja (Nueva)",
+        "Señales y Sistemas",
+        "Intro. a los microprocesadores",
+        "Programación para Ingeniería Eléctrica",
+        "Electrónica Fundamental"
+      ],
+      6: [
+        "Métodos numéricos",
+        "Sistemas y Control",
+        "Taller Fourier",
+        "Señales aleatorias y Modulación",
+        "Opcional Ingeniería Eléctrica"
+      ],
+      7: [
+        "Medidas Eléctricas",
+        "Opcional Ingeniería Eléctrica",
+        "Opcional Básica",
+        "Opcional Ingeniería Biológica",
+        "Estimación y predicción en series temporales"
+      ],
+      8: [
+        "Pasantía",
+        "Redes de Datos I",
+        "Ingeniería Biomédica",
+        "AIMDs",
+        "Opcional Ingeniería Eléctrica"
+      ],
+      9: [
+        "Proyecto",
+        "Opcional Ing. Industrial",
+        "Opcional Ingeniería Biológica",
+        "Electrotecnia"
+      ],
+      10: [
+        "Proyecto",
+        "Legislación y relaciones industriales",
+        "Opc. Ingeniería y sociedad",
+        "Economía",
+        "Instalaciones Eléctricas"
+      ]
+    };
+
+    // Renderización dinámica
+    Object.entries(malla).forEach(([semestre, cursos]) => {
+      document.write(`<div class="semester"><h2>Semestre ${semestre}</h2>`);
+      cursos.forEach(curso => {
+        document.write(`<div class="course" onclick="toggleStatus(this)">${curso}</div>`);
+      });
+      document.write(`</div>`);
+    });
+
     function toggleStatus(el) {
       if (el.classList.contains("completed")) {
         el.classList.remove("completed");
@@ -68,3 +140,4 @@
   </script>
 </body>
 </html>
+
