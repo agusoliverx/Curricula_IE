@@ -1,294 +1,235 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Malla Ingeniería Eléctrica - Perfil Biomédica</title>
+  <meta charset="UTF-8">
+  <title>Malla Curricular</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f7fa;
-      margin: 0;
+      font-family: Arial, sans-serif;
       padding: 20px;
+      max-width: 1200px;
+      margin: auto;
     }
 
     h1 {
       text-align: center;
-      color: #2c3e50;
-      margin-bottom: 30px;
     }
 
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 10px;
-      max-width: 100%;
-    }
-
-    .semester-column {
-      background: #ffffff;
-      border-radius: 8px;
-      padding: 6px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
-
-    .semester-title {
-      text-align: center;
+    #creditos-contador {
       font-weight: bold;
-      background-color: #2c3e50;
-      color: white;
-      font-size: 0.75rem;
-      padding: 6px;
-      border-radius: 6px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      text-align: center;
     }
 
-    .course-box {
-      background-color: #e8f0fe;
-      border-left: 4px solid #4285f4;
-      padding: 6px;
-      margin-bottom: 6px;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      color: #2c3e50;
+    .progreso-container {
+      width: 100%;
+      background: #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    #barra-progreso {
+      height: 20px;
+      background: #4caf50;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      text-align: center;
+      padding: 10px;
+    }
+
+    td {
+      vertical-align: top;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .course {
+      background-color: #e0e0e0;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 8px;
       cursor: pointer;
-      position: relative;
+      font-size: 0.85rem;
       transition: background-color 0.3s;
-      line-height: 1.2;
     }
 
-    .course-box.completed {
-      background-color: #d0f0c0;
-      border-left-color: #2e7d32;
-      color: #2e7d32;
+    .course:hover {
+      background-color: #d0d0d0;
     }
 
-    .course-box.in-progress {
-      background-color: #fff3b0;
-      border-left-color: #b38600;
-      color: #b38600;
-    }
-
-    .course-box:hover::after {
-      content: attr(data-previas);
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #2c3e50;
-      color: #fff;
-      padding: 4px 8px;
-      font-size: 0.7rem;
-      white-space: nowrap;
-      border-radius: 4px;
-      margin-top: 4px;
-      z-index: 10;
-    }
-
-    .course-name {
-      font-weight: 600;
-    }
-
-    .course-credits {
-      font-size: 0.65rem;
-      color: #555;
-      margin-top: 2px;
+    .completed {
+      background-color: #b3e5b3 !important;
     }
   </style>
 </head>
 <body>
-  <h1>Malla Curricular - Ing. Eléctrica (Perfil Biomédica)</h1>
+  <h1>Malla Curricular</h1>
+  <div id="creditos-contador">Créditos completados: 0 / 450</div>
+  <div class="progreso-container">
+    <div id="barra-progreso"></div>
+  </div>
 
-  <div class="grid-container" id="malla-grid"></div>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Año/Semestre</th>
+        <th>Materias</th>
+      </tr>
+    </thead>
+    <tbody id="malla"></tbody>
+  </table>
 
   <script>
     const malla = {
-      1: [
-        ["Cálculo dif. e integral en una variable", 13],
-        ["GAL 1", 9],
-        ["Física 1", 10],
-      ],
-      2: [
-        ["Cálculo dif. e integral en varias variables", 13],
-        ["GAL 2", 9],
-        ["Física 2", 10],
-        ["Programación 1", 10],
-      ],
-      3: [
-        ["Cálculo Vectorial", 10],
-        ["Probabilidad y Estadística", 10],
-        ["Física 3", 10],
-        ["Mecánica Newtoniana", 10],
-        ["Física Experimental 1", 5],
-      ],
-      4: [
-        ["Ecuaciones Diferenciales", 10],
-        ["Electromagnetismo", 10],
-        ["Física Experimental 2", 5],
-        ["Teoría de Circuitos", 8],
-        ["Diseño Lógico", 12],
-      ],
-      5: [
-        ["Funciones de Variable Compleja", 5],
-        ["Señales y Sistemas", 11],
-        ["Intro. a los microprocesadores", 11],
-        ["Programación 2", 12],
-        ["Electrónica Fundamental", 11],
-      ],
-      6: [
-        ["Métodos numéricos", 8],
-        ["Sistemas y Control", 12],
-        ["Taller Fourier", 8],
-        ["Señales aleatorias y Modulación", 8],
-        ["Opcional Ingeniería Eléctrica", 0],
-      ],
-      7: [
-        ["Medidas Eléctricas", 10],
-        ["Opcional Ingeniería Eléctrica", 0],
-        ["Opcional Básica", 0],
-        ["Opcional Ingeniería Biológica", 0],
-        ["Estimación y predicción en series temporales", 10],
-      ],
-      8: [
-        ["Pasantía", 10],
-        ["Redes de Datos I", 8],
-        ["Ingeniería Biomédica", 8],
-        ["AIMDs", 8],
-        ["Opcional Ingeniería Eléctrica", 0],
-      ],
-      9: [
-        ["Proyecto", 10],
-        ["Opcional Ing. Industrial", 0],
-        ["Opcional Ingeniería Biológica", 0],
-        ["Electrotecnia", 10],
-      ],
-      10: [
-        ["Proyecto", 25],
-        ["Legislación y relaciones industriales", 6],
-        ["Opc. Ingeniería y sociedad", 0],
-        ["Economía", 7],
-        ["Instalaciones Eléctricas", 8],
-      ],
+      1: [["Cálculo dif. e integral en una variable", 13], ["GAL 1", 9], ["Física 1", 10]],
+      2: [["Cálculo dif. e integral en varias variables", 13], ["GAL 2", 9], ["Física 2", 10], ["Programación 1", 10]],
+      3: [["Cálculo Vectorial", 10], ["Probabilidad y Estadística", 10], ["Física 3", 10], ["Mecánica Newtoniana", 10], ["Física Experimental 1", 5]],
+      4: [["Ecuaciones Diferenciales", 10], ["Electromagnetismo", 10], ["Física Experimental 2", 5], ["Teoría de Circuitos", 8], ["Diseño Lógico", 12]],
+      5: [["Funciones de Variable Compleja", 5], ["Señales y Sistemas", 11], ["Intro. a los microprocesadores", 11], ["Programación 2", 12], ["Electrónica Fundamental", 11]],
+      6: [["Métodos numéricos", 8], ["Sistemas y Control", 12], ["Taller Fourier", 8], ["Señales aleatorias y Modulación", 8]],
+      7: [["Medidas Eléctricas", 10], ["Estimación y predicción en series temporales", 10]],
+      8: [["Pasantía", 10], ["Redes de Datos I", 8], ["Ingeniería Biomédica", 8], ["AIMDs", 8]],
+      9: [["Proyecto", 10], ["Electrotecnia", 10]],
+      10: [["Proyecto", 25], ["Legislación y relaciones industriales", 6], ["Economía", 7], ["Instalaciones Eléctricas", 8]]
     };
 
     const previas = {
-  "Cálculo dif. e integral en una variable": [],
-  "GAL 1": [],
-  "Física 1": [],
+      "Cálculo dif. e integral en una variable": [],
+      "GAL 1": [],
+      "Física 1": [],
+      "Cálculo dif. e integral en varias variables": ["Cálculo dif. e integral en una variable"],
+      "GAL 2": ["GAL 1"],
+      "Física 2": ["Cálculo dif. e integral en una variable", "Física 1"],
+      "Programación 1": [],
+      "Cálculo Vectorial": ["Cálculo dif. e integral en varias variables", "Cálculo dif. e integral en una variable", "GAL 1"],
+      "Probabilidad y Estadística": ["Cálculo dif. e integral en una variable", "Cálculo dif. e integral en varias variables", "GAL 1"],
+      "Física 3": ["Cálculo dif. e integral en una variable"],
+      "Mecánica Newtoniana": ["Física 1", "Cálculo dif. e integral en varias variables", "Física 2 o Física 3", "Cálculo dif. e integral en una variable"],
+      "Física Experimental 1": ["Física 1"],
+      "Ecuaciones Diferenciales": ["Cálculo dif. e integral en una variable", "Cálculo dif. e integral en varias variables", "GAL 1", "GAL 2"],
+      "Electromagnetismo": ["GAL 1", "GAL 2", "Cálculo dif. e integral en una variable", "Cálculo dif. e integral en varias variables", "Cálculo Vectorial"],
+      "Física Experimental 2": ["Física Experimental 1", "Física 3"],
+      "Teoría de Circuitos": ["Física 1", "Física 3", "Cálculo dif. e integral en una variable", "Cálculo dif. e integral en varias variables", "GAL 1"],
+      "Diseño Lógico": [],
+      "Funciones de Variable Compleja": [],
+      "Señales y Sistemas": [],
+      "Intro. a los microprocesadores": [],
+      "Programación 2": [],
+      "Electrónica Fundamental": [],
+      "Métodos numéricos": [],
+      "Sistemas y Control": [],
+      "Taller Fourier": [],
+      "Señales aleatorias y Modulación": [],
+      "Medidas Eléctricas": [],
+      "Estimación y predicción en series temporales": [],
+      "Pasantía": [],
+      "Redes de Datos I": [],
+      "Ingeniería Biomédica": [],
+      "AIMDs": [],
+      "Proyecto": [],
+      "Electrotecnia": [],
+      "Legislación y relaciones industriales": [],
+      "Economía": [],
+      "Instalaciones Eléctricas": []
+    };
 
-  "Cálculo dif. e integral en varias variables": ["Cálculo dif. e integral en una variable"],
-  "GAL 2": ["GAL 1"],
-  "Física 2": ["Cálculo dif. e integral en una variable", "Física 1"],
-  "Programación 1": [],
+    const tbody = document.getElementById("malla");
+    const estadoGuardado = JSON.parse(localStorage.getItem("materiasCompletadas") || "[]");
 
-  "Cálculo Vectorial": [
-    "Cálculo dif. e integral en varias variables",
-    "Cálculo dif. e integral en una variable",
-    "GAL 1"
-  ],
-  "Probabilidad y Estadística": [
-    "Cálculo dif. e integral en una variable",
-    "Cálculo dif. e integral en varias variables",
-    "GAL 1"
-  ],
-  "Física 3": ["Cálculo dif. e integral en una variable"],
-  "Mecánica Newtoniana": [
-    "Física 1",
-    "Cálculo dif. e integral en varias variables",
-    "Física 2 o Física 3",
-    "Cálculo dif. e integral en una variable"
-  ],
-  "Física Experimental 1": ["Física 1"],
+    Object.entries(malla).forEach(([semestre, materias]) => {
+      const tr = document.createElement("tr");
+      const tdSem = document.createElement("td");
+      tdSem.textContent = `Semestre ${semestre}`;
+      tr.appendChild(tdSem);
 
-  "Ecuaciones Diferenciales": [
-    "Cálculo dif. e integral en una variable",
-    "Cálculo dif. e integral en varias variables",
-    "GAL 1",
-    "GAL 2"
-  ],
-  "Electromagnetismo": [
-    "GAL 1",
-    "GAL 2",
-    "Cálculo dif. e integral en una variable",
-    "Cálculo dif. e integral en varias variables",
-    "Cálculo Vectorial"
-  ],
-  "Física Experimental 2": ["Física Experimental 1", "Física 3"],
-  "Teoría de Circuitos": [
-    "Física 1",
-    "Física 3",
-    "Cálculo dif. e integral en una variable",
-    "Cálculo dif. e integral en varias variables",
-    "GAL 1"
-  ],
-  "Diseño Lógico": [],
+      const td = document.createElement("td");
 
-  "Funciones de Variable Compleja": [],
-  "Señales y Sistemas": [],
-  "Intro. a los microprocesadores": [],
-  "Programación 2": [],
-  "Electrónica Fundamental": [],
+      materias.forEach(([nombre, creditos]) => {
+        const div = document.createElement("div");
+        div.className = "course";
+        div.textContent = `${nombre} (${creditos} cr)`;
+        div.dataset.nombre = nombre;
+        div.dataset.creditos = creditos;
 
-  "Métodos numéricos": [],
-  "Sistemas y Control": [],
-  "Taller Fourier": [],
-  "Señales aleatorias y Modulación": [],
+        if (estadoGuardado.includes(nombre)) {
+          div.classList.add("completed");
+        }
 
-  "Medidas Eléctricas": [],
-  "Estimación y predicción en series temporales": [],
+        const requisitos = previas[nombre] || [];
+        div.title = requisitos.length > 0
+          ? `Previas:\n- ${requisitos.join("\n- ")}`
+          : "Sin previas";
 
-  "Pasantía": [],
-  "Redes de Datos I": [],
-  "Ingeniería Biomédica": [],
-  "AIMDs": [],
-
-  "Proyecto": [],
-  "Electrotecnia": [],
-
-  "Legislación y relaciones industriales": [],
-  "Economía": [],
-  "Instalaciones Eléctricas": []
-};
-
-
-    const container = document.getElementById("malla-grid");
-
-    for (let semestre = 1; semestre <= 10; semestre++) {
-      const column = document.createElement("div");
-      column.className = "semester-column";
-
-      const title = document.createElement("div");
-      title.className = "semester-title";
-      title.textContent = `${semestre}º Sem`;
-      column.appendChild(title);
-
-      malla[semestre]?.forEach(([curso, creditos]) => {
-        const box = document.createElement("div");
-        box.className = "course-box";
-
-        const pre = previas[curso] || [];
-        box.setAttribute("data-previas", pre.length ? `Previas: ${pre.join(", ")}` : "Previas: Ninguna");
-
-        box.innerHTML = `
-          <div class="course-name">${curso}</div>
-          <div class="course-credits">${creditos} créditos</div>
-        `;
-
-        box.addEventListener("click", () => {
-          if (box.classList.contains("completed")) {
-            box.classList.remove("completed");
-            box.classList.add("in-progress");
-          } else if (box.classList.contains("in-progress")) {
-            box.classList.remove("in-progress");
+        div.addEventListener("click", () => {
+          if (div.classList.contains("completed")) {
+            div.classList.remove("completed");
           } else {
-            box.classList.add("completed");
+            if (requisitosCompletos(requisitos)) {
+              div.classList.add("completed");
+            } else {
+              alert("No podés marcar esta materia porque no cumplís todas las previas.");
+            }
           }
+          guardarEstado();
+          actualizarCreditos();
         });
 
-        column.appendChild(box);
+        td.appendChild(div);
       });
 
-      container.appendChild(column);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    });
+
+    function requisitosCompletos(requisitos) {
+      return requisitos.every(nombre => {
+        if (nombre.includes(" o ")) {
+          return nombre.split(" o ").some(opcion => estaCompletada(opcion));
+        }
+        return estaCompletada(nombre);
+      });
     }
+
+    function estaCompletada(nombre) {
+      return [...document.querySelectorAll(".course.completed")].some(div =>
+        div.dataset.nombre === nombre
+      );
+    }
+
+    function actualizarCreditos() {
+      const materias = document.querySelectorAll(".course.completed");
+      let suma = 0;
+      materias.forEach(div => {
+        suma += parseInt(div.dataset.creditos);
+      });
+
+      const total = 450;
+      const porcentaje = Math.min((suma / total) * 100, 100).toFixed(2);
+
+      document.getElementById("creditos-contador").textContent =
+        `Créditos completados: ${suma} / ${total}`;
+
+      document.getElementById("barra-progreso").style.width = `${porcentaje}%`;
+    }
+
+    function guardarEstado() {
+      const completadas = [...document.querySelectorAll(".course.completed")]
+        .map(div => div.dataset.nombre);
+      localStorage.setItem("materiasCompletadas", JSON.stringify(completadas));
+    }
+
+    actualizarCreditos(); // mostrar progreso inicial
   </script>
 </body>
 </html>
