@@ -3,158 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <title>Malla Ingeniería Eléctrica - Perfil Biomédica</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
-      padding: 30px;
-      background-color: #f8fafc;
-      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      padding: 20px;
     }
+
     h1 {
       text-align: center;
+      color: #2c3e50;
       margin-bottom: 40px;
-      color: #2978b5;
-      font-weight: 700;
-      font-size: 2rem;
     }
 
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 10px;
-      background: #fff;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-      border-radius: 8px;
-      overflow: hidden;
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 20px;
+      overflow-x: auto;
     }
 
-    thead tr {
-      background-color: #2978b5;
-      color: white;
-      font-weight: 700;
-      font-size: 1rem;
-      user-select: none;
+    .semester-column {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    th, td {
-      padding: 15px 20px;
-      vertical-align: top;
-    }
-
-    th {
+    .semester-title {
       text-align: center;
-      width: 70px;
-      border-right: 1px solid rgba(255,255,255,0.3);
-    }
-
-    tbody tr {
-      background-color: #fefefe;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      font-weight: bold;
+      background-color: #2c3e50;
+      color: white;
+      padding: 8px;
       border-radius: 8px;
-      transition: background-color 0.3s ease;
+      margin-bottom: 12px;
     }
 
-    tbody tr:hover {
-      background-color: #f0f7ff;
-    }
-
-    td.courses {
-      padding-left: 0;
-    }
-
-    .course {
-      display: inline-block;
-      background-color: #e3eaf7;
-      color: #2978b5;
-      padding: 6px 12px;
-      margin: 6px 6px 6px 0;
-      border-radius: 14px;
-      border: 1px solid #bdd1f7;
+    .course-box {
+      background-color: #e8f0fe;
+      border-left: 5px solid #4285f4;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #2c3e50;
       cursor: pointer;
       position: relative;
-      transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
-      font-weight: 600;
-      font-size: 0.9rem;
-      user-select: none;
+      transition: background-color 0.3s;
     }
 
-    .course.completed {
-      background-color: #c8e6c9; /* verde pastel */
+    .course-box.completed {
+      background-color: #d0f0c0;
+      border-left-color: #2e7d32;
       color: #2e7d32;
-      border-color: #2e7d32;
-    }
-    .course.completed::after {
-      content: "";
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      width: calc(100% - 20px);
-      border-bottom: 3px solid #2e7d32;
-      transform: translateY(-50%) rotate(-45deg);
-      pointer-events: none;
-      border-radius: 2px;
-      z-index: 1;
     }
 
-    .course.in-progress {
-      background-color: #fff3b0; /* amarillo pastel */
+    .course-box.in-progress {
+      background-color: #fff3b0;
+      border-left-color: #b38600;
       color: #b38600;
-      border-color: #b38600;
     }
 
-    .course:hover {
-      background-color: #d7e6fc;
-      border-color: #5596e6;
-      color: #1c3c72;
-      box-shadow: 0 0 8px rgba(85, 150, 230, 0.4);
-    }
-
-    /* Tooltip */
-    .course[title]:hover::after {
-      content: attr(title);
+    .course-box:hover::after {
+      content: attr(data-previas);
       position: absolute;
+      top: 100%;
       left: 50%;
-      bottom: 140%;
       transform: translateX(-50%);
-      background: #2978b5;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 8px;
-      white-space: nowrap;
+      background: #2c3e50;
+      color: #fff;
+      padding: 6px 10px;
       font-size: 0.8rem;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      white-space: nowrap;
+      border-radius: 6px;
+      margin-top: 6px;
       z-index: 10;
-      pointer-events: none;
-      opacity: 1;
-      transition: opacity 0.25s ease;
-    }
-    .course[title]::after {
-      opacity: 0;
-    }
-    .course[title]:not(:hover)::after {
-      opacity: 0;
     }
   </style>
 </head>
 <body>
   <h1>Malla Curricular - Ing. Eléctrica (Perfil Biomédica)</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Sem.</th>
-        <th>Materias</th>
-      </tr>
-    </thead>
-    <tbody id="malla-body">
-      <!-- Se genera dinámicamente -->
-    </tbody>
-  </table>
+  <div class="grid-container" id="malla-grid"></div>
 
   <script>
-    // Tu script permanece igual, solo asegúrate de copiarlo aquí.
-    // Para no hacerlo largo, te lo dejo idéntico al que me diste.
     const malla = {
       1: [
         "Cálculo dif. e integral en una variable",
@@ -228,12 +162,10 @@
       "Cálculo dif. e integral en una variable": [],
       "GAL 1": [],
       "Física 1": [],
-
       "Cálculo dif. e integral en varias variables": ["Cálculo dif. e integral en una variable"],
       "GAL 2": ["GAL 1"],
       "Física 2": ["Cálculo dif. e integral en una variable", "Física 1"],
       "Programación 1": [],
-
       "Cálculo Vectorial": [
         "Cálculo dif. e integral en varias variables",
         "Cálculo dif. e integral en una variable",
@@ -252,7 +184,6 @@
         "Cálculo dif. e integral en una variable"
       ],
       "Física Experimental 1": ["Física 1"],
-
       "Ecuaciones Diferenciales": [
         "Cálculo dif. e integral en una variable",
         "Cálculo dif. e integral en varias variables",
@@ -277,46 +208,41 @@
       "Diseño Lógico": []
     };
 
-    const tbody = document.getElementById("malla-body");
+    const container = document.getElementById("malla-grid");
 
-    Object.entries(malla).forEach(([semestre, cursos]) => {
-      const tr = document.createElement("tr");
+    for (let semestre = 1; semestre <= 10; semestre++) {
+      const column = document.createElement("div");
+      column.className = "semester-column";
 
-      // Columna semestre (con º)
-      const tdSem = document.createElement("th");
-      tdSem.textContent = `${semestre}º`;
-      tr.appendChild(tdSem);
+      const title = document.createElement("div");
+      title.className = "semester-title";
+      title.textContent = `${semestre}º Sem`;
+      column.appendChild(title);
 
-      // Columna cursos
-      const tdCursos = document.createElement("td");
-      tdCursos.className = "courses";
+      malla[semestre]?.forEach(curso => {
+        const box = document.createElement("div");
+        box.className = "course-box";
+        box.textContent = curso;
 
-      cursos.forEach(curso => {
-        const divCurso = document.createElement("div");
-        divCurso.className = "course";
-        divCurso.textContent = curso;
+        const pre = previas[curso] || [];
+        box.setAttribute("data-previas", pre.length ? `Previas: ${pre.join(", ")}` : "Previas: Ninguna");
 
-        const pre = previas[curso];
-        const preText = (pre && pre.length > 0) ? `Previas: ${pre.join(", ")}` : "Previas: Ninguna";
-        divCurso.title = preText;
-
-        divCurso.onclick = () => {
-          if (divCurso.classList.contains("completed")) {
-            divCurso.classList.remove("completed");
-            divCurso.classList.add("in-progress");
-          } else if (divCurso.classList.contains("in-progress")) {
-            divCurso.classList.remove("in-progress");
+        box.addEventListener("click", () => {
+          if (box.classList.contains("completed")) {
+            box.classList.remove("completed");
+            box.classList.add("in-progress");
+          } else if (box.classList.contains("in-progress")) {
+            box.classList.remove("in-progress");
           } else {
-            divCurso.classList.add("completed");
+            box.classList.add("completed");
           }
-        };
+        });
 
-        tdCursos.appendChild(divCurso);
+        column.appendChild(box);
       });
 
-      tr.appendChild(tdCursos);
-      tbody.appendChild(tr);
-    });
+      container.appendChild(column);
+    }
   </script>
 </body>
 </html>
